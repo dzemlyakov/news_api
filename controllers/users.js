@@ -10,19 +10,17 @@ const { NotFoundError, UnauthorizedError } = require('../errors/index-errors');
 // eslint-disable-next-line consistent-return
 module.exports.createUser = (req, res, next) => {
   const {
-    name, about, avatar, email, password,
+    name, email, password,
   } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
-      name, about, avatar, email, password: hash,
+      name, email, password: hash,
     }))
     .then((user) => {
       res.status(201).send({
         _id: user._id,
         email: user.email,
         name: user.name,
-        about: user.about,
-        avatar: user.avatar,
       });
     })
     .catch(next);
@@ -40,17 +38,11 @@ module.exports.login = (req, res, next) => {
         sameSite: true,
       }).send({ message: 'Success!' });
     })
-    .catch(() => next(new UnauthorizedError('Неправильные почта и пароль')));
+    .catch(() => next(new UnauthorizedError('Неправильная почта или пароль')));
 };
 
 
-module.exports.getAllUsers = (req, res, next) => {
-  User.find({})
-    .then((users) => res.send({ data: users }))
-    .catch(next);
-};
-
-module.exports.getSingleUser = (req, res, next) => {
+module.exports.getUser = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
       if (user === null) {
