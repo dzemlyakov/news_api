@@ -4,7 +4,7 @@
   "description": "Back-end project News",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=develop nodemon app.js",
+    "dev": "nodemon app.js",
     "start": "node app.js"
   },
   "repository": {
