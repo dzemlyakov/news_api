@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require('bcryptjs');
-const { INVALID_MAIL } = require('../constants/constants');
+const { INVALID_MAIL, WRONG_MAIL_OR_PASS } = require('../constants/constants');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
     select: false,
   },
 });
-userSchema.plugin(uniqueValidator);
+userSchema.plugin(uniqueValidator, { message: 'Not unique email' });
 userSchema.path('email').validate(validator.isEmail, INVALID_MAIL);
 
 // eslint-disable-next-line func-names
@@ -31,13 +31,13 @@ userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Неправильная почта или пароль'));
+        return Promise.reject(new Error(WRONG_MAIL_OR_PASS));
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new Error('Неправильная почта или пароль'));
+            return Promise.reject(new Error(WRONG_MAIL_OR_PASS));
           }
 
           return user;

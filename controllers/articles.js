@@ -1,5 +1,6 @@
 const Article = require('../models/article');
 const { ForbiddenError, NotFoundError } = require('../errors/index-errors');
+const { NOT_PERMISSION, NOT_ACTUAL_ARTICLE } = require('../constants/constants');
 
 module.exports.createArticle = (req, res, next) => {
   const {
@@ -27,10 +28,10 @@ module.exports.deleteArticle = (req, res, next) => {
     .select('+owner')
     .then((article) => {
       if (article === null) {
-        throw new NotFoundError('Такая карточка не найдена');
+        throw new NotFoundError(NOT_ACTUAL_ARTICLE);
       }
       if (!article.owner.equals(req.user._id)) {
-        throw new ForbiddenError('Невозможно удалить чужую карточку, отсутсвуют права!');
+        throw new ForbiddenError(NOT_PERMISSION);
       }
       return Article.remove(article)
         .then(() => res.status(200).send({ data: article }));

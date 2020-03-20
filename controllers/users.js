@@ -4,7 +4,8 @@ const User = require('../models/user');
 
 
 const { JWT_SECRET } = require('../config/config');
-const { NotFoundError, UnauthorizedError } = require('../errors/index-errors');
+const { NotFoundError, UnauthorizedError, WRONG_MAIL_OR_PASS } = require('../errors/index-errors');
+const { NOT_ACTUAL_USER } = require('../constants/constants');
 
 
 // eslint-disable-next-line consistent-return
@@ -38,7 +39,7 @@ module.exports.login = (req, res, next) => {
         sameSite: true,
       }).send({ message: 'Success!' });
     })
-    .catch(() => next(new UnauthorizedError('Неправильная почта или пароль')));
+    .catch(() => next(new UnauthorizedError(WRONG_MAIL_OR_PASS)));
 };
 
 
@@ -46,7 +47,7 @@ module.exports.getUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (user === null) {
-        throw new NotFoundError('Такой пользователь не найден');
+        throw new NotFoundError(NOT_ACTUAL_USER);
       }
       return res.send({ data: user });
     })
