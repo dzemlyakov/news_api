@@ -1,29 +1,20 @@
 require('dotenv').config();
 const express = require('express');
-const rateLimit = require('express-rate-limit');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
+const limiter = require('./middlewares/limiter');
+const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { signupValidation, signinValidation } = require('./middlewares/validation');
-const router = require('./routes/index');
 const { errorHandler } = require('./middlewares/erorr-handler');
-
-
 const { login, createUser } = require('./controllers/users');
-
 const { PORT, DATABASE_URL } = require('./config/config');
 
 
 const app = express();
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
-
 
 app.use(limiter);
 app.use(helmet());
@@ -34,12 +25,12 @@ mongoose.connect(DATABASE_URL, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
+  useUnifiedTopology: true,
 });
 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(requestLogger);
 
 
