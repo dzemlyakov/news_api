@@ -43,7 +43,7 @@ module.exports.login = (req, res, next) => {
 
 
 module.exports.getUser = (req, res, next) => {
-  User.findById(req.params.id)
+  User.findById(req.user._id)
     .then((user) => {
       if (user === null) {
         throw new NotFoundError('Такой пользователь не найден');

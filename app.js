@@ -8,14 +8,14 @@ const helmet = require('helmet');
 const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { signupValidation, signinValidation } = require('./middlewares/validation');
-const cardsRouter = require('./routes/cards');
-const usersRouter = require('./routes/users');
+const router = require('./routes/index');
 const { errorHandler } = require('./middlewares/erorr-handler');
-const auth = require('./middlewares/auth');
+
+
 const { login, createUser } = require('./controllers/users');
 
 const { PORT, DATABASE_URL } = require('./config/config');
-const NotFoundError = require('./errors/not-found-error');
+
 
 const app = express();
 
@@ -52,12 +52,8 @@ app.get('/crash-test', () => {
 app.post('/signin', signinValidation, login);
 app.post('/signup', signupValidation, createUser);
 
-app.use('/cards', auth, cardsRouter);
+app.use(router);
 
-app.use('/users', auth, usersRouter);
-app.use('*', (req, res, next) => {
-  next(new NotFoundError('Запрашиваемый ресурс не найден'));
-});
 
 app.use(errorLogger);
 
