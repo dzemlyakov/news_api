@@ -4,8 +4,8 @@ const User = require('../models/user');
 
 
 const { JWT_SECRET } = require('../config/config');
-const { NotFoundError, UnauthorizedError, WRONG_MAIL_OR_PASS } = require('../errors/index-errors');
-const { NOT_ACTUAL_USER } = require('../constants/constants');
+const { NotFoundError, UnauthorizedError } = require('../errors/index-errors');
+const { NOT_ACTUAL_USER, WRONG_MAIL_OR_PASS, SUCCES_AUTH } = require('../constants/constants');
 
 
 // eslint-disable-next-line consistent-return
@@ -37,7 +37,7 @@ module.exports.login = (req, res, next) => {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
         sameSite: true,
-      }).send({ message: 'Success!' });
+      }).send({ message: SUCCES_AUTH });
     })
     .catch(() => next(new UnauthorizedError(WRONG_MAIL_OR_PASS)));
 };

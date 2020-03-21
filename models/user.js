@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require('bcryptjs');
-const { INVALID_MAIL, WRONG_MAIL_OR_PASS } = require('../constants/constants');
+const { INVALID_MAIL, WRONG_MAIL_OR_PASS, NOT_UNIQUE_MAIL } = require('../constants/constants');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
     select: false,
   },
 });
-userSchema.plugin(uniqueValidator, { message: 'Not unique email' });
+userSchema.plugin(uniqueValidator, { message: NOT_UNIQUE_MAIL });
 userSchema.path('email').validate(validator.isEmail, INVALID_MAIL);
 
 // eslint-disable-next-line func-names
