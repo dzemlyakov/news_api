@@ -33,7 +33,7 @@ module.exports.deleteArticle = (req, res, next) => {
       if (!article.owner.equals(req.user._id)) {
         throw new ForbiddenError(NOT_PERMISSION);
       }
-      return Article.remove(article)
+      return Article.deleteOne(article)
         .then(() => res.status(200).send({ data: article }));
     })
     .catch(next);
