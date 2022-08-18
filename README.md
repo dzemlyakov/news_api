@@ -1,5 +1,5 @@
-# news_api
-backend for diploma-project - Бэкенд для сервиса News analyzer. Version: v.1.0.0
+# News-api
+Backend application for diploma-project - Бэкенд для сервиса News analyzer. Version: v.1.0.0
 
 ## Описание
 Серверная часть дипломного проекта для Яндекс.Практикума.
